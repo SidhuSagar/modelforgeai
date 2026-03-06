@@ -40,7 +40,8 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "*",  # restrict in production
+        "https://modelforgeai-k22i.vercel.app",
+        "*",  # Allow all origins for production
     ],
     allow_credentials=True,
     allow_methods=["*"],

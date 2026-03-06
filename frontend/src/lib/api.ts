@@ -1,5 +1,5 @@
 // src/lib/api.ts
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "https://modelforgeai.onrender.com";
 
 export const api = {
   // 1️⃣ Get available tasks
@@ -173,5 +173,3 @@ export const api = {
     return json;
   },
 };
-
-const API_URL = "https://modelforgeai.onrender.com";
