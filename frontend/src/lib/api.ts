@@ -173,3 +173,5 @@ export const api = {
     return json;
   },
 };
+
+const API_URL = "https://modelforgeai.onrender.com";
