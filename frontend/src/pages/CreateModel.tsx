@@ -957,6 +957,51 @@ const ModelTestingAPI = ({ config, onBack }: { config: ModelConfig; onBack: () =
     toast({ title: "Downloading model...", description: filename });
   };
 
+  const handleDownloadPlot = () => {
+    if (!config.modelInfo?.plot_path) {
+      toast({ title: "No plot available", description: "Plot not generated", variant: "destructive" });
+      return;
+    }
+    const plotPath = config.modelInfo.plot_path as string;
+    const filename = plotPath.split(/[\\/]/).pop();
+    if (!filename) {
+      toast({ title: "Download failed", variant: "destructive" });
+      return;
+    }
+    const url = api.getDownloadUrl(filename);
+    // Create a temporary anchor element to trigger download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast({ title: "Downloading evaluation plot...", description: filename });
+  };
+
+  const handleDownloadMetrics = () => {
+    if (!config.modelInfo?.report) {
+      toast({ title: "No metrics available", description: "Evaluation metrics not found", variant: "destructive" });
+      return;
+    }
+    const report = config.modelInfo.report;
+    const modelName = config.modelInfo.model_name || "model";
+    const filename = `${modelName}_evaluation_metrics.json`;
+    
+    // Create JSON blob and download
+    const jsonStr = JSON.stringify(report, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast({ title: "Downloading evaluation metrics...", description: filename });
+  };
+
   // optional: show plot if available (assumes backend makes it available via download endpoint)
   const plotUrl =
     config.modelInfo?.plot_path
@@ -990,8 +1035,18 @@ const ModelTestingAPI = ({ config, onBack }: { config: ModelConfig; onBack: () =
         )}
 
         {plotUrl && (
-          <div className="mt-6">
+          <div className="mt-6 space-y-3">
             <img src={plotUrl} alt="Model performance" className="mx-auto rounded-lg border border-border max-w-full" />
+            <div className="flex justify-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleDownloadPlot}>
+                <Download className="mr-2 h-4 w-4" /> Download Plot
+              </Button>
+              {config.modelInfo?.report && (
+                <Button variant="outline" size="sm" onClick={handleDownloadMetrics}>
+                  <Download className="mr-2 h-4 w-4" /> Download Metrics (JSON)
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </Card>

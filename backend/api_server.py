@@ -382,6 +382,7 @@ async def predict_batch(samples: List[str] = Form(...), model_path: Optional[str
 def download_model(filename: str):
     search_dirs = [
         os.path.join(BASE_DIR, "outputs", "packages"),
+        os.path.join(BASE_DIR, "outputs", "plots"),  # Add plots directory
         os.path.join(BASE_DIR, "models", "classification"),
         os.path.join(BASE_DIR, "models", "chatbot"),
         os.path.join(BASE_DIR, "models", "knowledge"),
