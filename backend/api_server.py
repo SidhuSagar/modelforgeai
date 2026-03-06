@@ -266,8 +266,16 @@ def _train_background_job(
         # Visualization
         if task_type == "classification" and isinstance(model_info, dict) and "report" in model_info:
             _update_job(job_id, "Visualization", "Creating performance plots...")
-            plot_path = visualize_training_summary(model_info)
-            model_info["plot_path"] = os.path.abspath(plot_path)
+            try:
+                plot_path = visualize_training_summary(model_info)
+                if plot_path and os.path.exists(plot_path):
+                    model_info["plot_path"] = os.path.abspath(plot_path)
+                    print(f"✅ Plot saved at: {model_info['plot_path']}")
+                else:
+                    print(f"⚠️ Plot generation returned None or file not found: {plot_path}")
+            except Exception as e:
+                print(f"⚠️ Visualization failed: {e}")
+                traceback.print_exc()
 
         # Packaging
         _update_job(job_id, "Packaging", "Saving and packaging model...")

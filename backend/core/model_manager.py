@@ -214,11 +214,24 @@ prediction = model.predict(["Your text here"])
 print(prediction)
 ```
 
+### Evaluation Metrics
+
+This package includes:
+- **Model file**: `{os.path.basename(model_path)}` - The trained model
+- **Evaluation plot**: `*_report.png` - Visualization of model performance metrics (Precision, Recall, F1-score)
+- **Metadata**: `metadata.json` - Model information and training details
+
+The evaluation plot shows:
+- Precision, Recall, and F1-score for each class
+- Overall accuracy displayed at the top
+- Visual bar chart for easy comparison
+
 ### Notes
 
 - The model file (`{os.path.basename(model_path)}`) must be in the same directory as your script, or provide the full path
 - For best results with knowledge base models, ensure `sentence-transformers` is installed
 - Model metadata is available in `metadata.json` if included in the package
+- The evaluation plot image (`*_report.png`) is included in the package for reference
 
 ### Troubleshooting
 
@@ -284,7 +297,7 @@ def package_model_for_download(metadata_or_model_path: Union[Dict, str], model_n
     # if model_path is a directory (HF model dir etc.) zip entire directory
     if os.path.isdir(model_path):
         shutil.make_archive(zip_path.replace(".zip", ""), 'zip', root_dir=model_path)
-        # add metadata.json and README.md to zip if requested
+        # add metadata.json, README.md, and plot image to zip if requested
         if include_metadata:
             meta_to_write = metadata or load_model_metadata(model_name) or {}
             with zipfile.ZipFile(zip_path, 'a', compression=zipfile.ZIP_DEFLATED) as zf:
@@ -292,6 +305,12 @@ def package_model_for_download(metadata_or_model_path: Union[Dict, str], model_n
                     zf.writestr("metadata.json", json.dumps(metadata, indent=2))
                 readme_content = _generate_readme(meta_to_write, model_path)
                 zf.writestr("README.md", readme_content)
+                # Include evaluation plot if available
+                plot_path = meta_to_write.get("plot_path")
+                if plot_path and os.path.exists(plot_path):
+                    plot_filename = os.path.basename(plot_path)
+                    zf.write(plot_path, arcname=plot_filename)
+                    print(f"✅ Added evaluation plot to package: {plot_filename}")
         return zip_path
 
     # single-file case (e.g., .joblib or .pkl)
@@ -313,6 +332,14 @@ def package_model_for_download(metadata_or_model_path: Union[Dict, str], model_n
         # Include README.md with usage instructions
         readme_content = _generate_readme(meta_to_write if include_metadata else (metadata or {}), model_path)
         zf.writestr("README.md", readme_content)
+        
+        # Include evaluation plot if available
+        meta_for_plot = metadata or (load_model_metadata(model_name) if include_metadata else {})
+        plot_path = meta_for_plot.get("plot_path")
+        if plot_path and os.path.exists(plot_path):
+            plot_filename = os.path.basename(plot_path)
+            zf.write(plot_path, arcname=plot_filename)
+            print(f"✅ Added evaluation plot to package: {plot_filename}")
 
     return zip_path
 

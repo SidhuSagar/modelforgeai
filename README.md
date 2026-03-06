@@ -1,5 +1,9 @@
-# 🧠 ModelForge AI
+Perfect — you’re ready to finalize your project 🎯
 
+Here’s a complete README.md written in a clean, professional format for your ModelForge AI project.
+It explains setup, folder structure, commands, features, and troubleshooting — perfect for GitHub or documentation.
+
+# 🧠 ModelForge AI
 **A no-code intelligent AI model builder** — upload any dataset, train classification/chatbot/knowledge models, and export ready-to-use models — all through an interactive web UI.
 
 ---
@@ -12,314 +16,238 @@
 - Train machine learning models (SVM, Logistic Regression, Random Forest, LLMs)
 - Visualize training metrics
 - Download the trained model as a `.zip` package
-- Test predictions within the browser
+- (Optional) Deploy or test within the browser
 
 It combines:
 - 🧩 **FastAPI backend** for model training and orchestration  
 - 💻 **React + TypeScript frontend** for a modern, guided UI workflow  
 
 ---
-
+  
 ## 🗂️ Project Structure
 
-```
+
+
 modelforgeai/
 │
-├── backend/              # 🐍 Python backend code
-│   ├── api/             # API routers and schemas
-│   ├── core/            # Core logic modules
-│   │   ├── dataset_handler.py
-│   │   ├── model_trainer.py
-│   │   ├── model_manager.py
-│   │   ├── predictor.py
-│   │   └── visualizer.py
-│   ├── services/        # Business logic services
-│   ├── configs/         # Configuration files
-│   ├── scripts/         # Utility scripts
-│   ├── tests/           # Test files
-│   └── api_server.py    # FastAPI application entry point
+├── api_server.py # 🚀 FastAPI backend server
+├── core/ # 🧠 Core logic modules
+│ ├── dataset_handler.py # Data loading and cleaning
+│ ├── model_trainer.py # Model training logic
+│ ├── model_manager.py # Metadata + model packaging
+│ ├── prompt_parser.py # Task auto-detection helper
+│ ├── visualizer.py # Accuracy & metric plots
+│ └── ...
 │
-├── frontend/            # ⚛️ React + TypeScript frontend
-│   ├── src/
-│   │   ├── pages/       # Page components
-│   │   ├── components/  # Reusable components
-│   │   └── lib/         # Utilities and API client
-│   └── package.json
+├── datasets/ # 📂 Uploaded and processed datasets
+│ ├── classification/
+│ ├── processed/
 │
-├── docs/                # 📚 Documentation
-├── requirements.txt     # Python dependencies
-├── Dockerfile          # Backend Docker image
-├── docker-compose.yml     # Docker orchestration
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
-```
+├── models/ # 🧠 Trained model files
+│ └── classification/
+│
+├── outputs/ # 📦 Packaged model zips and charts
+│ └── packages/
+│
+├── frontend/ # 🌐 React + TypeScript UI
+│ ├── src/
+│ │ ├── pages/
+│ │ │ └── CreateModel.tsx # Main frontend flow
+│ │ └── lib/api.ts # API connection layer
+│ └── ...
+│
+└── README.md # 📘 You’re here
+
 
 ---
 
 ## ⚙️ Installation
 
-### Prerequisites
-
-- Python 3.11+
-- Node.js 18+
-- npm or yarn
-
-### 1️⃣ Clone the repository
-
+### **1️⃣ Clone the repository**
 ```bash
 git clone https://github.com/yourusername/modelforgeai.git
 cd modelforgeai
-```
 
-### 2️⃣ Backend Setup (FastAPI)
-
-**Create and activate a virtual environment:**
-
-```bash
+2️⃣ Backend Setup (FastAPI)
+🔹 Create and activate a virtual environment
 python -m venv venv
+venv\Scripts\activate    # (Windows)
+# or
+source venv/bin/activate # (Mac/Linux)
 
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
-```
-
-**Install dependencies:**
-
-```bash
+🔹 Install dependencies
 pip install -r requirements.txt
-```
 
-**Run the backend:**
 
-```bash
-cd backend
-uvicorn api_server:app --reload --host 0.0.0.0 --port 8000
-```
+If you don’t have a requirements.txt, you can create one with:
 
-**Note:** Make sure to run from the `backend/` directory so that relative imports work correctly.
+pip install fastapi uvicorn scikit-learn pandas numpy joblib matplotlib
+pip freeze > requirements.txt
+
+🔹 Run the backend
+uvicorn api_server:app --reload
+
 
 You should see:
-```
+
 INFO:     Uvicorn running on http://127.0.0.1:8000
-```
 
-✅ **Check:**
-- API Docs → http://127.0.0.1:8000/docs
-- Health Check → http://127.0.0.1:8000/health
 
-### 3️⃣ Frontend Setup (React + Vite)
+✅ Check:
 
-**Move into the frontend folder:**
+API Docs → http://127.0.0.1:8000/docs
 
-```bash
+Health Check → http://127.0.0.1:8000/health
+
+3️⃣ Frontend Setup (React + Vite)
+
+Move into the frontend folder:
+
 cd frontend
-```
 
-**Install dependencies:**
 
-```bash
+Install dependencies:
+
 npm install
-```
 
-**Run the dev server:**
 
-```bash
+Run the dev server:
+
 npm run dev
-```
 
-You'll see:
-```
+
+You’ll see:
+
 Local: http://127.0.0.1:5173/
-```
 
-✅ **Open your browser → http://127.0.0.1:5173**
 
----
+✅ Open your browser → http://127.0.0.1:5173
 
-## 🐳 Docker Setup (Alternative)
+🧭 How to Use
 
-**Using Docker Compose:**
+Select Task Type
+Choose between:
 
-```bash
-docker-compose up --build
-```
+Classification – train NLP or sentiment models
 
-This will start both backend (port 8000) and frontend (port 5173) services.
+Chatbot – build FAQ/chat engines
 
-**Backend only:**
+Knowledge – create embeddings for RAG
 
-```bash
-docker build -t modelforgeai-backend .
-docker run -p 8000:8000 modelforgeai-backend
-```
+Choose Model Type
+Auto-selects best algorithm (or manually pick SVM, Random Forest, etc.)
 
----
+Upload Dataset
+Upload .csv, .json, or .txt. The backend auto-cleans and preprocesses it.
 
-## 🧭 How to Use
+Set Preprocessing Options
+Adjust train/test split or column names.
 
-1. **Select Task Type**
-   - Choose between: Classification, Chatbot, or Knowledge base
+Train Model
+Watch real-time training progress (handled by FastAPI background jobs).
 
-2. **Choose Model Type**
-   - Auto-selects best algorithm (or manually pick SVM, Random Forest, etc.)
+Visualize & Download
+Once done, a .zip is generated with:
 
-3. **Upload Dataset**
-   - Upload `.csv`, `.json`, or `.txt`. The backend auto-cleans and preprocesses it.
+Trained model
 
-4. **Set Preprocessing Options**
-   - Adjust train/test split or column names.
+Metadata
 
-5. **Train Model**
-   - Watch real-time training progress (handled by FastAPI background jobs).
+Performance charts
 
-6. **Visualize & Download**
-   - Once done, a `.zip` is generated with:
-     - Trained model
-     - Metadata
-     - Performance charts
-     - Training logs
+Training logs
 
-7. **Test / Deploy**
-   - Try sample predictions or export model for deployment.
+Test / Deploy
+Try sample predictions or export model for deployment.
 
----
+🔄 API Endpoints Summary
+Endpoint	Method	Description
+/	GET	Root status
+/health	GET	Backend health check
+/tasks	GET	Task options
+/models	GET	Model options
+/datasets/upload	POST	Upload and preprocess dataset
+/preprocess	POST	Set test split
+/train/start	POST	Begin background training job
+/train/status/{job_id}	GET	Poll training status
+/download/{filename}	GET	Download packaged model
+🧰 Tech Stack
+Frontend
 
-## 🔄 API Endpoints Summary
+⚛️ React (Vite + TypeScript)
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Root status |
-| `/health` | GET | Backend health check |
-| `/tasks` | GET | Task options |
-| `/models` | GET | Model options |
-| `/datasets/upload` | POST | Upload and preprocess dataset |
-| `/preprocess` | POST | Set test split |
-| `/train/start` | POST | Begin background training job |
-| `/train/status/{job_id}` | GET | Poll training status |
-| `/download/{filename}` | GET | Download packaged model |
+🎨 TailwindCSS + ShadCN UI
 
-Full API documentation available at: http://127.0.0.1:8000/docs
+🔔 Lucide Icons
 
----
+🌈 Toast notifications & Progress UI
 
-## 🧰 Tech Stack
+Backend
 
-### Frontend
-- ⚛️ React (Vite + TypeScript)
-- 🎨 TailwindCSS + ShadCN UI
-- 🔔 Lucide Icons
-- 🌈 Toast notifications & Progress UI
+⚡ FastAPI
 
-### Backend
-- ⚡ FastAPI
-- 🤖 Scikit-learn, Pandas, NumPy
-- 📈 Matplotlib for charts
-- 💾 Joblib for model storage
-- 📦 Zip packaging for downloads
-- 🔮 Sentence Transformers (optional)
-- 🚀 Transformers / PyTorch (optional)
+🤖 Scikit-learn, Pandas, NumPy
 
----
+📈 Matplotlib for charts
 
-## 🧩 CORS Setup
+💾 Joblib for model storage
 
-Since the frontend (port 5173) communicates with backend (port 8000), CORS is enabled in `backend/api_server.py`:
+📦 Zip packaging for downloads
 
-```python
+🧩 CORS Setup
+
+Since the frontend (port 5173) communicates with backend (port 8000),
+CORS is enabled in api_server.py:
+
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # restrict in production
+    allow_origins=["*"],  # or ["http://127.0.0.1:5173"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-```
 
----
+⚠️ Common Issues
+Problem	Fix
+UserWarning: Field "model_type" has conflict with protected namespace	Add BaseModel.model_config = {"protected_namespaces": ()} under your app creation
+CORS errors	Ensure allow_origins=["*"] or add "http://127.0.0.1:5173"
+Attribute "app" not found	Run as uvicorn api_server:app --reload (not main)
+Frontend can’t connect	Make sure both servers are running (backend: 8000, frontend: 5173)
+🏁 Example Run
 
-## ⚠️ Common Issues
-
-| Problem | Fix |
-|---------|-----|
-| CORS errors | Ensure `allow_origins=["*"]` or add frontend URL |
-| Attribute "app" not found | Run as `uvicorn api_server:app --reload` from `backend/` directory |
-| Frontend can't connect | Make sure both servers are running (backend: 8000, frontend: 5173) |
-| Import errors | Ensure you're running from the correct directory and virtual environment is activated |
-
----
-
-## 🏁 Quick Start Example
-
-**Terminal 1 - Backend:**
-```bash
-cd backend
+Start backend
 uvicorn api_server:app --reload
-```
 
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
+Start frontend
 npm run dev
-```
 
-**Open browser:**
-```
-http://127.0.0.1:5173
-```
+Open http://127.0.0.1:5173
 
 Follow on-screen steps:
-1. Select → Task Type
-2. Upload → Dataset
-3. Train → Model
-4. Download → `.zip` file
 
----
+Select → Task Type
 
-## 📝 Development
+Upload → Dataset
 
-### Running Tests
+Train → Model
 
-```bash
-cd backend
-python -m pytest tests/
-```
+Download → .zip file
 
-### Code Structure
-
-- **Backend**: Follows FastAPI best practices with modular core logic
-- **Frontend**: Component-based React architecture with TypeScript
-- **API**: RESTful endpoints with background job processing
-
----
-
-## 🧾 License
+🧾 License
 
 MIT License © 2025
+Developed by [ GADI GURU SAGAR REDDY]
 
-Developed by [GADI GURU SAGAR REDDY]
+🌟 Future Improvements
 
----
+Support for GPU/LLM fine-tuning
 
-## 🌟 Future Improvements
+Model performance dashboards
 
-- [ ] Support for GPU/LLM fine-tuning
-- [ ] Model performance dashboards
-- [ ] One-click cloud deployment
-- [ ] Auto column detection for datasets
-- [ ] Project save/load workflows
-- [ ] Model versioning and registry
-- [ ] Real-time collaboration features
+One-click cloud deployment
 
----
+Auto column detection for datasets
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📧 Contact
-
-For questions or support, please open an issue on GitHub.
+Project save/load workflows

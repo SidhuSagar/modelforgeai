@@ -1,13 +1,26 @@
 # core/visualizer.py
+import matplotlib
+# Use non-interactive backend for server environments (no display)
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import json
 import os
 import numpy as np
 
-def plot_classification_report(report: dict, model_name: str, save_dir="outputs/plots"):
+def plot_classification_report(report: dict, model_name: str, save_dir=None):
     """
     Creates visual plots for classification metrics and accuracy.
     """
+    # Resolve save_dir relative to backend directory if not absolute
+    if save_dir is None:
+        # Get backend directory (parent of core/)
+        backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        save_dir = os.path.join(backend_dir, "outputs", "plots")
+    elif not os.path.isabs(save_dir):
+        # If relative path, resolve relative to backend directory
+        backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        save_dir = os.path.join(backend_dir, save_dir)
+    
     os.makedirs(save_dir, exist_ok=True)
 
     # Extract overall accuracy if available
